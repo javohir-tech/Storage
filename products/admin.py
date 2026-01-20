@@ -16,12 +16,12 @@ class MaterialAdmin(admin.ModelAdmin):
 
 @admin.register(ProductMaterial)
 class ProductMaterialAdmin(admin.ModelAdmin):
-    list_display = ["product_id", "material_id" , "quantity"]
+    list_display = ["product_id", "material_id", "quantity"]
 
 
 @admin.register(Warehouse)
 class WareHouseAdmin(admin.ModelAdmin):
-    list_display = ["id", "remainder", "price"]
+    list_display = ["id", "material_id", "remainder", "price"]
 
 
 # Register your models here.

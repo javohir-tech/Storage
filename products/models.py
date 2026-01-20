@@ -5,7 +5,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class Product(BaseModel):
-    product_code = models.CharField(max_length=6, unique=True)
+    product_code = models.IntegerField(unique=True)
     product_name = models.CharField(max_length=64, unique=True)
 
     def create_material(self, material, quantity):
@@ -29,16 +29,25 @@ class Product(BaseModel):
 class Material(BaseModel):
     material_name = models.CharField(max_length=120, unique=True)
 
+    def check_material_name(self):
+        if self.material_name:
+            self.material_name = self.material_name.lower().strip()
+
     def __str__(self):
         return self.material_name
+
+    def save(self, *args, **kwargs):
+        self.check_material_name()
+
+        super().save(*args, **kwargs)
 
 
 class ProductMaterial(models.Model):
     product_id = models.ForeignKey(
-        Product, on_delete=models.CASCADE, related_name="products"
+        Product, on_delete=models.CASCADE, related_name="materials"
     )
     material_id = models.ForeignKey(
-        Material, on_delete=models.CASCADE, related_name="materials"
+        Material, on_delete=models.CASCADE, related_name="products"
     )
     quantity = models.DecimalField(max_digits=10, decimal_places=2)
 
@@ -50,4 +59,6 @@ class Warehouse(models.Model):
     remainder = models.IntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(1000)]
     )
-    price = models.IntegerField([MinValueValidator(100), MaxValueValidator(100000)])
+    price = models.IntegerField(
+        validators=[MinValueValidator(100), MaxValueValidator(100000)]
+    )
