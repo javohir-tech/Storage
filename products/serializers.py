@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework.validators import ValidationError
-from .models import Product ,  Warehouse
+from .models import Product, Warehouse
 
 
 class ProductMaterialListSerializer(serializers.Serializer):
@@ -8,9 +8,6 @@ class ProductMaterialListSerializer(serializers.Serializer):
     quantity = serializers.IntegerField()
 
     def validate(self, attrs):
-
-        product_code = attrs.get("product_code")
-        quantity = attrs.get("quantity")
 
         p_code = attrs.get("product_code")
         product = Product.objects.filter(product_code=p_code)
@@ -20,13 +17,10 @@ class ProductMaterialListSerializer(serializers.Serializer):
             )
 
         return attrs
-    
-class PartiyaSerializer(serializers.Serializer) :
-    warehouse_id = serializers.IntegerField()
+
+
+class PartiyaSerializer(serializers.Serializer):
+    warehouse_id = serializers.IntegerField(allow_null=True)
     material_name = serializers.CharField()
     qty = serializers.IntegerField()
-    price = serializers.IntegerField()
-    
-    
-    
-        
+    price = serializers.IntegerField(allow_null=True)
